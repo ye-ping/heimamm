@@ -405,9 +405,6 @@ export default {
       background-color: #fff;
       cursor: pointer;
     }
-    .shot {
-      width: 350px;
-    }
   }
 }
 .login-input {
