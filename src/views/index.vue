@@ -49,8 +49,12 @@
      
     </el-menu>
       </el-aside>
-      <!-- 主题 -->
-      <el-main class="main">Main</el-main>
+      <!-- 主体 -->
+      <el-main class="main">
+        <!-- 路由出口 -->
+    <!-- <router-link to="/index/subject"></router-link> -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -60,7 +64,7 @@ export default {
   name: "index",
   data(){
     return {
-      isCollapse:true,
+      isCollapse:false,
     }
   }
 };
