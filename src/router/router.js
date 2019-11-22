@@ -11,9 +11,9 @@ import index from '../views/index.vue'
 Vue.use(VueRouter);
 //创建路由规则
 const routes = [
-    {path:'/login',component:login},
+    {path:'/login',component:login},//登录注册路由
     {path:'/',component:login},//重定向
-    {path:'/index',component:index}
+    {path:'/index',component:index},//首页路由
 ];
 //创建路由实例
 const router = new VueRouter({
