@@ -5,12 +5,15 @@ import VueRouter from 'vue-router';
 
 // 导入login组件
 import login from '../views/login.vue';
+// 导入首页组件
+import index from '../views/index.vue'
 // 注册路由
 Vue.use(VueRouter);
 //创建路由规则
 const routes = [
     {path:'/login',component:login},
     {path:'/',component:login},//重定向
+    {path:'/index',component:index}
 ];
 //创建路由实例
 const router = new VueRouter({
