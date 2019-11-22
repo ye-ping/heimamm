@@ -206,7 +206,7 @@ export default {
       // 登录图形码路径
       captchaSrc: "http://183.237.67.218:3002/captcha?type=login",
       // 对话框宽度
-      formLabelWidth: "60px",
+      formLabelWidth: "70px",
       // 用户头像路径
       imageUrl: "",
       //  注册图形码地址
