@@ -11,7 +11,7 @@
       <div class="right">
         <img src="../assets/login_icon.png" alt />
         <span>您好</span>
-        <el-button class="primary" type="primary">退出</el-button>
+        <el-button class="primary" type="primary" size="mini">退出</el-button>
       </div>
     </el-header>
     <el-container>
@@ -20,14 +20,15 @@
         <el-menu
         :collapse="isCollapse"
       default-active="2"
+      router
       class="el-menu-vertical-demo">
     
-      <el-menu-item index="2">
+      <el-menu-item index="/index/data" >
         <i class="el-icon-pie-chart"></i>
-        <span slot="title">数据概览</span>
+        <span slot="title" >数据概览</span>
       </el-menu-item>
 
-      <el-menu-item index="2">
+      <el-menu-item index="/index/user">
         <i class="el-icon-user"></i>
         <span slot="title">用户列表</span>
       </el-menu-item>

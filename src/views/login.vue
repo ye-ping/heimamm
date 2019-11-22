@@ -115,14 +115,21 @@
           </el-col>
           <el-col :span="6" :offset="0.5">
             <!-- <div class="grid-content bg-purple" @click="getMSg">获取用户验证码</div> -->
-            <input type="button" class="grid-content" @click="getMSg" ref="button" :disabled="isDisabled" v-model="buttonTex">
+            <input
+              type="button"
+              class="grid-content"
+              @click="getMSg"
+              ref="button"
+              :disabled="isDisabled"
+              v-model="buttonTex"
+            />
           </el-col>
         </el-row>
       </el-form>
       <!-- 按钮 -->
       <div slot="footer" class="dialog-footer">
         <el-button @click="isshow = false">取 消</el-button>
-        <el-button type="primary" @click="regUser" >确 定</el-button>
+        <el-button type="primary" @click="regUser">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -132,8 +139,12 @@
 
 <script>
 // 导入axios
-import axios from "axios";
+// import axios from "axios";
+// 导入login  api 用名字的导入
+import { login } from "../api/api.js";
 
+// 导入注册api
+import {res} from "../api/api.js";
 export default {
   name: "login",
   data() {
@@ -172,8 +183,8 @@ export default {
         phone: "",
         email: "",
         password: "",
-        rcode: "",//手机验证码
-        code: ""//图形验证码
+        rcode: "", //手机验证码
+        code: "" //图形验证码
       },
       rules: {
         //  登录表单验证规则
@@ -188,17 +199,23 @@ export default {
         ]
       },
       // 注册页面表单验证,验证规则
-      regRules:{
-        icon:[{required:true,message:'头像不能为空'}],
-        name:[{required:true,message:'昵称不能为空'}],
-        email:[{required:true,message:'邮箱不能为空'}],
-        phone:[{validator:checkPhone},
-                {required:true,message:'手机号能不能为空'}],
-        password:[{required:true,message:'密码不能为空'},
-                  {min:6,max:12,message:'密码强度不够'}],
-        code:[{required:true,message:'图形码不能为空'},
-              {min:4,max:4,message:'图形码只能有4位'}],
-        rcode:[{required:true,message:'验证码不能为空'}]
+      regRules: {
+        icon: [{ required: true, message: "头像不能为空" }],
+        name: [{ required: true, message: "昵称不能为空" }],
+        email: [{ required: true, message: "邮箱不能为空" }],
+        phone: [
+          { validator: checkPhone },
+          { required: true, message: "手机号能不能为空" }
+        ],
+        password: [
+          { required: true, message: "密码不能为空" },
+          { min: 6, max: 12, message: "密码强度不够" }
+        ],
+        code: [
+          { required: true, message: "图形码不能为空" },
+          { min: 4, max: 4, message: "图形码只能有4位" }
+        ],
+        rcode: [{ required: true, message: "验证码不能为空" }]
       },
 
       //  隐私协议勾选框
@@ -212,9 +229,9 @@ export default {
       //  注册图形码地址
       regCaptchaSrc: "http://183.237.67.218:3002/captcha?type=sendsms",
       //按钮是否禁用
-      isDisabled:false,
+      isDisabled: false,
       // 按钮输入框的值
-      buttonTex:'获取用户验证码',
+      buttonTex: "获取用户验证码"
     };
   },
 
@@ -231,15 +248,20 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           //验证成功,发送axios
-          axios({
-            url: "http://183.237.67.218:3002/login",
-            method: "post",
-            data: {
-              phone: this.loginForm.phone,
-              password: this.loginForm.password,
-              code: this.loginForm.captcha
-            },
-            withCredentials: true
+          // axios({
+          //   url: "http://183.237.67.218:3002/login",
+          //   method: "post",
+          //   data: {
+          //     phone: this.loginForm.phone,
+          //     password: this.loginForm.password,
+          //     code: this.loginForm.captcha
+          //   },
+          //   withCredentials: true
+          // })
+          login({
+            phone: this.loginForm.phone,
+            password: this.loginForm.password,
+            code: this.loginForm.captcha
           }).then(res => {
             //成功回调
             window.console.log(res);
@@ -278,54 +300,56 @@ export default {
       return isJPG && isLt2M;
     },
     // 获取验证码
-    getMSg(){
+    getMSg() {
       // 非空判断
-      if(this.regForm.phone.trim()==''){
-        this.$message.warning('手机号没写哦!');
+      if (this.regForm.phone.trim() == "") {
+        this.$message.warning("手机号没写哦!");
         return;
-      }else if(this.regForm.code.trim()==''){
-        this.$message.warning('验证码没填哦!');
+      } else if (this.regForm.code.trim() == "") {
+        this.$message.warning("验证码没填哦!");
         return;
       }
       // 手机格式验证
       const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
-      if(!reg.test(this.regForm.phone)){
-        this.$message.warning('手机号是不是写错了');
+      if (!reg.test(this.regForm.phone)) {
+        this.$message.warning("手机号是不是写错了");
         return;
       }
       // 说明格式都正确,发送axios
-      axios({
-        url:'http://183.237.67.218:3002/sendsms',
-        method:'post',
-        data: {
-          code:this.regForm.code,
-          phone:this.regForm.phone
-        },
-      // 跨域携带请求头,携带cookin
-      withCredentials:true
-      }).then(res=>{
+      // axios({
+      //   url:'http://183.237.67.218:3002/sendsms',
+      //   method:'post',
+      //   data: {
+      //     code:this.regForm.code,
+      //     phone:this.regForm.phone
+      //   },
+      // // 跨域携带请求头,携带cookin
+      // withCredentials:true
+      // })
+      res({
+        code: this.regForm.code,
+        phone: this.regForm.phone
+      }).then(res => {
         //成功回调
-       window.console.log(res);
+        window.console.log(res);
       });
       // 判断60s之后才能再次发送验证码
       // 设置一个计时器,把按钮设置为禁用
-      let time =60;
-    let timeID= setInterval(()=>{
-        this.isDisabled=true;
-        this.buttonTex=`${time}之后再次获取`;
+      let time = 60;
+      let timeID = setInterval(() => {
+        this.isDisabled = true;
+        this.buttonTex = `${time}之后再次获取`;
         time--;
         window.console.log(time);
-        if(time==0){
-          this.isDisabled=false;
-          this.buttonTex='获取用户验证码'
-          clearInterval(timeID)
+        if (time == 0) {
+          this.isDisabled = false;
+          this.buttonTex = "获取用户验证码";
+          clearInterval(timeID);
         }
-      },1000)
+      }, 1000);
     },
     // 用户注册
-    regUser(){
-
-    },
+    regUser() {}
   }
 };
 </script>
@@ -370,7 +394,8 @@ export default {
     height: 178px;
     display: block;
   }
-  .el-dialog__wrapper .el-dialog {//注册框大盒子
+  .el-dialog__wrapper .el-dialog {
+    //注册框大盒子
     width: 603px;
     height: 786px;
     margin: 0 auto;
