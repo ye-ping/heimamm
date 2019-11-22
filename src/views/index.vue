@@ -4,7 +4,7 @@
     <!-- 头部 -->
     <el-header class="header">
       <div class="left">
-        <i class="el-icon-s-fold"></i>
+        <i class="el-icon-s-fold " :class="{rotate:isCollapse}" @click="isCollapse=!isCollapse"></i>
         <img src="../assets/indexlogo.png" alt />
         <span>黑马面面</span>
       </div>
@@ -16,7 +16,39 @@
     </el-header>
     <el-container>
       <!-- 侧边栏 -->
-      <el-aside width="200px" class="Aside">Aside</el-aside>
+      <el-aside width="auto" class="Aside">
+        <el-menu
+        :collapse="isCollapse"
+      default-active="2"
+      class="el-menu-vertical-demo">
+    
+      <el-menu-item index="2">
+        <i class="el-icon-pie-chart"></i>
+        <span slot="title">数据概览</span>
+      </el-menu-item>
+
+      <el-menu-item index="2">
+        <i class="el-icon-user"></i>
+        <span slot="title">用户列表</span>
+      </el-menu-item>
+
+      <el-menu-item index="2">
+        <i class="el-icon-edit-outline"></i>
+        <span slot="title">题库列表</span>
+      </el-menu-item>
+
+      <el-menu-item index="2">
+        <i class="el-icon-office-building"></i>
+        <span slot="title">企业列表</span>
+      </el-menu-item>
+
+      <el-menu-item index="2">
+        <i class="el-icon-notebook-2"></i>
+        <span slot="title">学科列表</span>
+      </el-menu-item>
+     
+    </el-menu>
+      </el-aside>
       <!-- 主题 -->
       <el-main class="main">Main</el-main>
     </el-container>
@@ -25,7 +57,12 @@
 
 <script>
 export default {
-  name: "index"
+  name: "index",
+  data(){
+    return {
+      isCollapse:true,
+    }
+  }
 };
 </script>
 
@@ -43,8 +80,9 @@ export default {
       display: flex;
       align-items: center;
       i {
-        // 
+        //
         font-weight: 700;
+        
         display: inline-block;
       }
       img {
@@ -55,7 +93,7 @@ export default {
       }
       span {
         font-size: 22px;
-        color: #49A1FF;
+        color: #49a1ff;
       }
     }
     .right {
@@ -66,22 +104,34 @@ export default {
         height: 43px;
         margin-right: 9px;
         border-radius: 50%;
-    }
-    span {
-      font-size: 14px;
-    }
-    .primary {
-      margin-left: 38px;
-    }
+      }
+      span {
+        font-size: 14px;
+      }
+      .primary {
+        margin-left: 38px;
+      }
     }
   }
   .Aside {
     height: 100%;
-    background-color: yellow;
   }
   .main {
     height: 100%;
     background-color: skyblue;
+  }
+  // 折叠菜单样式
+  .rotate {
+    transform: rotate(-90deg);
+  }
+  .el-icon-s-fold {
+    font-size: 40px;
+    transition: 0.5s;
+
+  }
+    .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
   }
 }
 </style>
