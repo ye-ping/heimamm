@@ -139,12 +139,18 @@
 
 <script>
 // 导入axios
-// import axios from "axios";
+import axios from "axios";
 // 导入login  api 用名字的导入
 import { login } from "../api/api.js";
 
+// 导入token函数
+import {setToken} from '../utils/token.js'
+
+// 导入接受短信api
+// import {sendsms} from "../api/api.js";
+
 // 导入注册api
-import {res} from "../api/api.js";
+import {res} from '../api/api.js'
 export default {
   name: "login",
   data() {
@@ -267,6 +273,9 @@ export default {
             window.console.log(res);
             if (res.data.code == 200) {
               this.$message.success("你可算是回来了");
+              // 保存token,并跳转页面
+              setToken(res.data.data.token);
+              this.$router.push('/index');
             } else {
               this.$message.warning("登录失败");
             }
@@ -286,6 +295,8 @@ export default {
     // 用户头像上传
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
+      // 保存表单中的url数据
+      this.resisterForm.avatar = res.data.file_path;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -316,20 +327,21 @@ export default {
         return;
       }
       // 说明格式都正确,发送axios
-      // axios({
-      //   url:'http://183.237.67.218:3002/sendsms',
-      //   method:'post',
-      //   data: {
-      //     code:this.regForm.code,
-      //     phone:this.regForm.phone
-      //   },
-      // // 跨域携带请求头,携带cookin
-      // withCredentials:true
+      axios({
+        url:'http://183.237.67.218:3002/sendsms',
+        method:'post',
+        data: {
+          code:this.regForm.code,
+          phone:this.regForm.phone
+        },
+      // 跨域携带请求头,携带cookin
+      withCredentials:true
+      })
+      // sendsms({
+      //   code: this.regForm.code,
+      //   phone: this.regForm.phone
       // })
-      res({
-        code: this.regForm.code,
-        phone: this.regForm.phone
-      }).then(res => {
+      .then(res => {
         //成功回调
         window.console.log(res);
       });
@@ -340,7 +352,7 @@ export default {
         this.isDisabled = true;
         this.buttonTex = `${time}之后再次获取`;
         time--;
-        window.console.log(time);
+        // window.console.log(time);
         if (time == 0) {
           this.isDisabled = false;
           this.buttonTex = "获取用户验证码";
@@ -349,7 +361,43 @@ export default {
       }, 1000);
     },
     // 用户注册
-    regUser() {}
+    regUser() {
+       // 获取饿了么的表单
+      this.$refs.regForm.validate(valid => {
+        if (valid) {
+          //验证成功,发送axios
+          // axios({
+          //   url: "http://183.237.67.218:3002/login",
+          //   method: "post",
+          //   data: {
+          //     phone: this.loginForm.phone,
+          //     password: this.loginForm.password,
+          //     code: this.loginForm.captcha
+          //   },
+          //   withCredentials: true
+          // })
+          res({
+            // phone: this.loginForm.phone,
+            // password: this.loginForm.password,
+            // code: this.loginForm.captcha
+            avatar:this.regForm.avatar,
+            email:this.regForm.email,
+            name:this.regForm.name,
+            password:this.regForm.password,
+            phone:this.regForm.phone,
+            rcode:this.regForm.rcode
+          }).then(res => {
+            //成功回调
+            window.console.log(res);
+            if (res.data.code == 200) {
+              this.$message.success("注册成功");
+            } else {
+              this.$message.warning("注册失败");
+            }
+          });
+        }
+      });
+    }
   }
 };
 </script>

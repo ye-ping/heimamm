@@ -15,10 +15,19 @@ export function login(data){//登录api
     })
 }
 
-// 注册api
-export function res(data){
+// 接受短信api
+export function sendsms(data){
     return axios({
         url:'/sendsms',
+        method:'post',
+        data
+    })
+}
+
+// 注册api
+export function res(data){
+    axios({
+        url:'/register',
         method:'post',
         data
     })

@@ -3,6 +3,12 @@ import Vue from 'vue';//导入vue
 //导入路由
 import VueRouter from 'vue-router';
 
+// 解决同步跳转报错
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 // 导入login组件
 import login from '../views/login.vue';
 // 导入首页组件
