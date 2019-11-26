@@ -5,6 +5,8 @@ Vue.config.productionTip = false
 
 //导入全局样式
 import   './style/base.css'
+// 导入全局过滤器
+import   './filter/filter.js'
 
 // 导入路由 
 import router from './router/router.js'

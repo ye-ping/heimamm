@@ -69,7 +69,8 @@
         <el-form-item label="头像" prop="icon" v-model="regForm.icon" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://183.237.67.218:3002/uploads"
+            name="image"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
@@ -139,9 +140,9 @@
 
 <script>
 // 导入axios
-import axios from "axios";
+// import axios from "axios";
 // 导入login  api 用名字的导入
-import { login } from "../api/api.js";
+import { login,sendsms,res } from "../api/api.js";
 
 // 导入token函数
 import {setToken} from '../utils/token.js'
@@ -150,7 +151,7 @@ import {setToken} from '../utils/token.js'
 // import {sendsms} from "../api/api.js";
 
 // 导入注册api
-import {res} from '../api/api.js'
+// import {res} from '../api/api.js'
 export default {
   name: "login",
   data() {
@@ -190,7 +191,8 @@ export default {
         email: "",
         password: "",
         rcode: "", //手机验证码
-        code: "" //图形验证码
+        code: "", //图形验证码
+        avatar:''
       },
       rules: {
         //  登录表单验证规则
@@ -296,7 +298,7 @@ export default {
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
       // 保存表单中的url数据
-      this.resisterForm.avatar = res.data.file_path;
+      this.regForm.avatar = res.data.file_path;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -327,27 +329,27 @@ export default {
         return;
       }
       // 说明格式都正确,发送axios
-      axios({
-        url:'http://183.237.67.218:3002/sendsms',
-        method:'post',
-        data: {
-          code:this.regForm.code,
-          phone:this.regForm.phone
-        },
-      // 跨域携带请求头,携带cookin
-      withCredentials:true
-      })
-      // sendsms({
-      //   code: this.regForm.code,
-      //   phone: this.regForm.phone
+      // axios({
+      //   url:'http://183.237.67.218:3002/sendsms',
+      //   method:'post',
+      //   data: {
+      //     code:this.regForm.code,
+      //     phone:this.regForm.phone
+      //   },
+      // // 跨域携带请求头,携带cookin
+      // withCredentials:true
       // })
+      sendsms({
+        code: this.regForm.code,
+        phone: this.regForm.phone
+      })
       .then(res => {
         //成功回调
         window.console.log(res);
       });
       // 判断60s之后才能再次发送验证码
       // 设置一个计时器,把按钮设置为禁用
-      let time = 60;
+      let time = 10;
       let timeID = setInterval(() => {
         this.isDisabled = true;
         this.buttonTex = `${time}之后再次获取`;
