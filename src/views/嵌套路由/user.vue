@@ -61,7 +61,7 @@
 
     <!-- 新增框 -->
     <el-dialog title="新增用户" :visible.sync="addShow">
-      <el-form :model="addForm" :rules="rules" ref="addForm">
+      <el-form :model="addForm" status-icon :rules="rules" ref="addForm">
         <el-form-item label="用户名" prop="name" :label-width="formLabelWidth">
           <el-input v-model="addForm.name" autocomplete="off"></el-input>
         </el-form-item>
@@ -93,7 +93,7 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑用户" :visible.sync="editShow">
-      <el-form :model="editForm" :rules="rules" ref="editForm">
+      <el-form :model="editForm" status-icon :rules="rules" ref="editForm">
         <el-form-item label="用户名" prop="name" :label-width="formLabelWidth">
           <el-input v-model="editForm.name" autocomplete="off"></el-input>
         </el-form-item>
@@ -117,7 +117,7 @@
         <el-form-item label="状态" :label-width="formLabelWidth">
           <el-select v-model="editForm.status" placeholder="请选择活动区域">
             <el-option label="启用" :value="addForm.status==0?'禁用':'启用'"></el-option>
-            <el-option label="禁用" value=""></el-option>
+            <el-option label="禁用" value></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -135,6 +135,32 @@ import { user } from "../../api/api.js";
 export default {
   name: "user",
   data() {
+    // 手机号正则验证
+     var checkPhone = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('手机号不能为空'));
+        }else{
+          const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+          if(!reg.test(value)){
+            callback(new Error('手机号格式不对哦'))
+          }else{
+            callback();
+          }
+        }
+      };
+      // 邮箱正则运算
+      let checkEmail = (rule,value,callback)=>{
+        if(!value){
+          callback(new Error('邮箱不能为空'));
+        }else{
+          const reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+          if(reg.test(value)){
+            callback();
+          }else {
+            callback(new Error('邮箱格式不正确'))
+          }
+        }
+      };
     return {
       //行内表单
       formInline: {},
@@ -156,8 +182,8 @@ export default {
       //规则
       rules: {
         name: [{ required: true, message: "用户名不能为空" }],
-        email: [{ required: true, message: "用邮箱不能为空" }],
-        phone: [{ required: true, message: "用电话不能为空" }]
+        email: [{ required: true, validator:checkEmail }],
+        phone: [{ required: true, validator:checkPhone }]
       },
       //宽度
       formLabelWidth: "70px"
@@ -218,12 +244,30 @@ export default {
       });
     },
     //删除
-    remove(data) {
-      user.remove({ id: data.id }).then(res => {
+    // remove(data) {
+    //   user.remove({ id: data.id }).then(res => {
+    //     this.$message.success(res.data.message);
+    //     this.list();
+    //   });
+    // },
+
+     remove(data) {
+        this.$confirm('此操作将永久删除该用户, 是否继续?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          user.remove({ id: data.id }).then(res => {
         this.$message.success(res.data.message);
         this.list();
       });
-    },
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+     },
     // 编辑
     edit(data) {
       //使用深拷贝

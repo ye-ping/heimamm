@@ -37,9 +37,7 @@
           <el-table-column prop="tag" label="所属领域"></el-table-column>
           <el-table-column prop="creater" label="创建者"></el-table-column>
           <el-table-column prop="create_time" label="创建日期">
-            <template slot-scope="scope">
-              {{scope.row.create_time | qiye-Time}}
-            </template>
+            <template slot-scope="scope">{{scope.row.create_time | qiye-Time}}</template>
           </el-table-column>
           <el-table-column label="状态">
             <template slot-scope="scope">
@@ -222,12 +220,30 @@ export default {
       });
     },
     //删除
-    remove(data) {
-      qiye.remove({ id: data.id }).then(res => {
+    // remove(data) {
+    //   qiye.remove({ id: data.id }).then(res => {
+    //     this.$message.success(res.data.message);
+    //     this.list(); //刷新数据
+    //   });
+    // },
+     remove(data) {
+        this.$confirm('此操作将永久删除该企业, 是否继续?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          qiye.remove({ id: data.id }).then(res => {
         this.$message.success(res.data.message);
         this.list(); //刷新数据
       });
-    },
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      },
+  
     // 编辑
     edit(data) {
       window.console.log(data);

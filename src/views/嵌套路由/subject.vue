@@ -162,8 +162,9 @@ export default {
           // 成功
           this.isShow = false;
           subject.add(this.subjectForm).then(res => {
-            window.console.log(res);
-            this.$message.success("新增成功");
+            // window.console.log(res);
+           
+            this.$message.success(res.data.message);
             this.page = 1;
             this.list(); //刷新
           });
