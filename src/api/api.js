@@ -1,7 +1,7 @@
 // 导入axios
 import axios from 'axios'
 import { getToken} from '../utils/token.js';
-import { Message } from 'element-ui';
+// import { Message } from 'element-ui';
 // import { listenerCount } from 'cluster';
 // import {removeToken} from '../utils/token.js'
 // 导入elementUI的弹窗
@@ -52,10 +52,11 @@ axios.interceptors.request.use(
       //   router.push("/login");
       //   return;
       // }
-      if(response.data.code===200){
-        Message.success(response.data.message);
-      }
+      // if(response.data.code===200){
+      //   Message.success(response.data.message);
+      // }
       return response;
+     
     },
     function(error) {
       return Promise.reject(error);
@@ -188,6 +189,52 @@ edit(data){
 status(data){
   return axios({
     url:'/enterprise/status',
+    method:'post',
+    data
+  })
+}
+  //
+}
+
+
+// 用户列表
+export const user ={
+  // 新增
+add(data){
+  return axios({
+    url:'/user/add',
+    method:'post',
+    data
+  })
+},
+// 列表
+list(params){
+  return axios({
+    url:'/user/list',
+    method:'get',
+    params
+  })
+},
+  // 编辑
+edit(data){
+  return axios({
+    url:'/user/edit',
+    method:'post',
+    data
+  })
+},
+  //删除
+  remove(data){
+    return axios({
+      url:'/user/remove',
+      method:'post',
+      data
+    })
+  },
+  //状态
+status(data){
+  return axios({
+    url:'/user/status',
     method:'post',
     data
   })
