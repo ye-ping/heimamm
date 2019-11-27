@@ -77,7 +77,7 @@
           <el-input v-model="addForm.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="所属领域">
-          <el-select v-model="addForm.tag" placeholder="请选择状态">
+          <el-select v-model="addForm.tag" placeholder="请选择状态" :label-width="formLabelWidth">
             <el-option label="金融" value="金融"></el-option>
             <el-option label="互联网" value="互联网"></el-option>
             <el-option label="电商" value="电商"></el-option>
@@ -86,10 +86,9 @@
         <el-form-item label="企业简称" :label-width="formLabelWidth">
           <el-input v-model="addForm.short_name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="企业简介" :label-width="formLabelWidth">
-          <el-input v-model="addForm.intro" autocomplete="off"></el-input>
+        <el-form-item label="创建者" :label-width="formLabelWidth">
+          <el-input v-model="addForm.creater" autocomplete="off"></el-input>
         </el-form-item>
-
         <el-form-item label="企业备注" :label-width="formLabelWidth">
           <el-input v-model="addForm.remark" autocomplete="off"></el-input>
         </el-form-item>
@@ -291,6 +290,9 @@ export default {
 .el-dialog__wrapper {
   .el-dialog {
     height: 550px;
+    .el-form-item__label{
+      text-align: left;
+    }
   }
 }
 

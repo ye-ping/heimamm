@@ -82,8 +82,8 @@
         <el-form-item label="学科简称" :label-width="formLabelWidth">
           <el-input v-model="subjectForm.short_name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="学科间接" :label-width="formLabelWidth">
-          <el-input v-model="subjectForm.intro" autocomplete="off"></el-input>
+        <el-form-item label="创建者" :label-width="formLabelWidth">
+          <el-input v-model="subjectForm.creater" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="学科备注" :label-width="formLabelWidth">
           <el-input v-model="subjectForm.remark" autocomplete="off"></el-input>
@@ -104,14 +104,14 @@
         <el-form-item label="学科名称" prop="name" :label-width="formLabelWidth">
           <el-input v-model="editForm.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="学科简称" :label-width="formLabelWidth">
+        <el-form-item label="简称" :label-width="formLabelWidth">
           <el-input v-model="editForm.short_name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="学科间接" :label-width="formLabelWidth">
-          <el-input v-model="editForm.intro" autocomplete="off"></el-input>
+        <el-form-item label="创建者" :label-width="formLabelWidth">
+          <el-input v-model="editForm.creater" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="学科备注" :label-width="formLabelWidth">
-          <el-input v-model="editForm.remark" autocomplete="off"></el-input>
+        <el-form-item label="创建时间" :label-width="formLabelWidth">
+          <el-input v-model="editForm.create_time" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -244,6 +244,7 @@ export default {
     edit(data) {
       // 弹框
       this.editShow = true;
+      window.console.log(data);
       this.editForm = JSON.parse(JSON.stringify(data));
     },
     // 保存按钮
