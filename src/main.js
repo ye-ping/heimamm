@@ -11,6 +11,9 @@ import   './filter/filter.js'
 // 导入路由 
 import router from './router/router.js'
 
+//导入创库store
+import store from './store/store.js'
+
 //导入elementUI
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -18,5 +21,6 @@ Vue.use(ElementUI);
 
 new Vue({
   router,//挂载路由
+  store,//挂载路由
   render: h => h(App),
 }).$mount('#app')

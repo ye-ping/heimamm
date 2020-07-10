@@ -42,7 +42,7 @@
         <el-table-column prop="address" label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="edit(scope.row)">编辑</el-button>
-            <el-button type="text" @click="status(scope.row)">{{scope.row.status==1? '启用':'禁用' }}</el-button>
+            <el-button type="text" @click="status(scope.row)">{{scope.row.status==1? '禁用':'启用' }}</el-button>
             <el-button type="text" @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>

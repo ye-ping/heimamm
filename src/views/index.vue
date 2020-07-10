@@ -47,7 +47,6 @@
       <!-- 主体 -->
       <el-main class="main">
         <!-- 路由出口 -->
-        <!-- <router-link to="/index/subject"></router-link> -->
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -56,7 +55,7 @@
 
 <script>
 // 导入获取token的函数
-import { getToken,removeToken } from "../utils/token.js";
+import { removeToken } from "../utils/token.js";
 
 // 导入axios  api
 import { userInfo } from "../api/api.js";
@@ -95,36 +94,51 @@ export default {
         });
     }
   },
+  //计算属性
+  computed:{
+    getName(){
+      return this.$store.state.userinfo.name;
+    },
+    getIcon(){
+      return 'http://183.237.67.218:3002/'+this.$store.state.userinfo.avatar;
+    }
+  },
   // 生命周期钩子
   beforeCreate() {
     // 判断token是否存在
-    const token = getToken();
-    if (!token) {
-      // 提示用户
-      this.$message.error("小老弟,你木有登录哦");
-      // 不存在退回登录页
-      this.$router.push("/login");
-    }
+    // const token = getToken();
+    // if (!token) {
+    //   // 提示用户
+    //   this.$message.error("小老弟,你木有登录哦");
+    //   // 不存在退回登录页
+    //   this.$router.push("/login");
+    // }
   },
   // 创建钩子,获取用户信息,渲染页面
-  created() {
-    userInfo().then(res => {
-      // // 判断token
-      // if (res.data.code == 0) {
-      //   // token有问题
-      //   this.$message.error("小老弟伪造token,牛逼啊!");
-      //   // 删除token
-      //   removeToken();
-      //   // 跳转到登录页
-      //   this.$router.push("/login");
-      //   // 不在往后执行
-      //   return;
-      // }
-      // 如果token是真的,就获取返回的头像和名字,渲染页面
-      this.avatar = `http://183.237.67.218:3002/${res.data.data.avatar}`;
-      window.console.log(this.avatar);
-      this.name = res.data.data.name;
-    });
+  async  created() {
+    let res = await userInfo();
+    this.avatar = `http://183.237.67.218:3002/${res.data.data.avatar}`;
+    this.name = res.data.data.username;
+    window.console.log(this.name);
+    window.console.log(res);
+    // userInfo().then(res => {
+    //   // // 判断token
+    //   // if (res.data.code == 0) {
+    //   //   // token有问题
+    //   //   this.$message.error("小老弟伪造token,牛逼啊!");
+    //   //   // 删除token
+    //   //   removeToken();
+    //   //   // 跳转到登录页
+    //   //   this.$router.push("/login");
+    //   //   // 不在往后执行
+    //   //   return;
+    //   // }
+    //   // 如果token是真的,就获取返回的头像和名字,渲染页面
+    //   window.console.log(res);
+    //   this.avatar = `http://183.237.67.218:3002/${res.data.data.avatar}`;
+    //   window.console.log(this.avatar);
+    //   this.name = res.data.data.name;
+    // });
   }
 };
 </script>
@@ -181,7 +195,7 @@ export default {
   }
   .main {
     height: 100%;
-    background-color: skyblue;
+    background-color: rgb(99, 199, 241);
   }
   // 折叠菜单样式
   .rotate {

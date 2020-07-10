@@ -14,3 +14,14 @@ export function getToken(){
 export function removeToken(){
     window.localStorage.removeItem(KEY);
 }
+
+// 设置localStorage中的数据
+export function setUserInfo(key,UserInfo){
+    window.localStorage.setItem(key,JSON.stringify(UserInfo))
+
+}
+// 获取localStorage中的数据
+export function getUserInfo(key){
+   return JSON.parse(window.localStorage.getItem(key))
+
+}

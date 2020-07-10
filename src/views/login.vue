@@ -80,8 +80,8 @@
           </el-upload>
         </el-form-item>
         <!-- 昵称 -->
-        <el-form-item label="昵称" prop="name" :label-width="formLabelWidth">
-          <el-input v-model="regForm.name" autocomplete="off"></el-input>
+        <el-form-item label="昵称" prop="username" :label-width="formLabelWidth">
+          <el-input v-model="regForm.username" autocomplete="off"></el-input>
         </el-form-item>
         <!-- 邮箱 -->
         <el-form-item label="邮箱" prop="email" :label-width="formLabelWidth">
@@ -139,19 +139,15 @@
 
 
 <script>
-// 导入axios
-// import axios from "axios";
 // 导入login  api 用名字的导入
-import { login,sendsms,res } from "../api/api.js";
+import { login, sendsms, res } from "../api/api.js";
 
 // 导入token函数
-import {setToken} from '../utils/token.js'
+import { setToken } from "../utils/token.js";
 
-// 导入接受短信api
-// import {sendsms} from "../api/api.js";
+// 导入localStorage中的方法
+import { setUserInfo } from "../utils/token.js";
 
-// 导入注册api
-// import {res} from '../api/api.js'
 export default {
   name: "login",
   data() {
@@ -182,20 +178,19 @@ export default {
       //注册页面是否显示
       isshow: false,
       // 取消确定按钮
-      // dialogFormVisible:false,
       // 注册页面表单变量
       regForm: {
-        name: "",
+        username: "",
         region: "",
         phone: "",
         email: "",
         password: "",
         rcode: "", //手机验证码
         code: "", //图形验证码
-        avatar:''
+        avatar: ""
       },
+      //  登录表单验证规则
       rules: {
-        //  登录表单验证规则
         phone: [{ validator: checkPhone }],
         password: [
           { required: true, message: "密码不能为空" },
@@ -208,8 +203,7 @@ export default {
       },
       // 注册页面表单验证,验证规则
       regRules: {
-        icon: [{ required: true, message: "头像不能为空" }],
-        name: [{ required: true, message: "昵称不能为空" }],
+        username: [{ required: true, message: "昵称不能为空" }],
         email: [{ required: true, message: "邮箱不能为空" }],
         phone: [
           { validator: checkPhone },
@@ -256,16 +250,6 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           //验证成功,发送axios
-          // axios({
-          //   url: "http://183.237.67.218:3002/login",
-          //   method: "post",
-          //   data: {
-          //     phone: this.loginForm.phone,
-          //     password: this.loginForm.password,
-          //     code: this.loginForm.captcha
-          //   },
-          //   withCredentials: true
-          // })
           login({
             phone: this.loginForm.phone,
             password: this.loginForm.password,
@@ -277,7 +261,13 @@ export default {
               this.$message.success("你可算是回来了");
               // 保存token,并跳转页面
               setToken(res.data.data.token);
-              this.$router.push('/index');
+              // 用仓库保存用户所有信息
+              this.$store.commit("CHANGEINFO", res.data.data);
+              // 将用户信息保存到本地存储
+              setUserInfo('userInfo',res.data.data)
+              // window.console.log(res.data.data);
+              //跳转首页
+              this.$router.push("/index");
             } else {
               this.$message.warning("登录失败");
             }
@@ -291,7 +281,7 @@ export default {
     },
     // 获取注册图形码
     addCap() {
-      this.regCaptchaSrc = `http://183.237.67.218:3002/captcha?type=sendsms${Date.now()}`;
+      this.regCaptchaSrc = `http://183.237.67.218:3002/captcha?type=sendsms&${Date.now()}`;
       window.console.log("hahhahaha");
     },
     // 用户头像上传
@@ -342,8 +332,7 @@ export default {
       sendsms({
         code: this.regForm.code,
         phone: this.regForm.phone
-      })
-      .then(res => {
+      }).then(res => {
         //成功回调
         window.console.log(res);
       });
@@ -364,30 +353,17 @@ export default {
     },
     // 用户注册
     regUser() {
-       // 获取饿了么的表单
+      // 获取饿了么的表单
       this.$refs.regForm.validate(valid => {
         if (valid) {
-          //验证成功,发送axios
-          // axios({
-          //   url: "http://183.237.67.218:3002/login",
-          //   method: "post",
-          //   data: {
-          //     phone: this.loginForm.phone,
-          //     password: this.loginForm.password,
-          //     code: this.loginForm.captcha
-          //   },
-          //   withCredentials: true
-          // })
+          this.isshow = false; //关闭注册页
           res({
-            // phone: this.loginForm.phone,
-            // password: this.loginForm.password,
-            // code: this.loginForm.captcha
-            avatar:this.regForm.avatar,
-            email:this.regForm.email,
-            name:this.regForm.name,
-            password:this.regForm.password,
-            phone:this.regForm.phone,
-            rcode:this.regForm.rcode
+            avatar: this.regForm.avatar,
+            email: this.regForm.email,
+            username: this.regForm.username,
+            password: this.regForm.password,
+            phone: this.regForm.phone,
+            rcode: this.regForm.rcode
           }).then(res => {
             //成功回调
             window.console.log(res);
@@ -408,6 +384,7 @@ export default {
 
 
 <style lang="less">
+//最大的盒子
 .login-box {
   width: 100%;
   height: 100%;
